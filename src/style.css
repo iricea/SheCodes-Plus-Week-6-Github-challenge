@@ -1,0 +1,32 @@
+.current-weather-emoji,
+#current-city,
+.current-temperature {
+  color: #0b5ed7;
+}
+.current-temperature {
+  opacity: 0.7;
+  font-size: 46px;
+}
+
+#current-weather-emoji,
+.weather-emoji {
+  font-size: 46px;
+}
+#current-weather-emoji {
+  height: 70px;
+  width: auto;
+}
+
+.card.forecast {
+  text-align: center;
+}
+
+#celsius,
+#fahrenheit {
+  font-size: 16px;
+  color: #0b5ed7;
+}
+
+.active-degrees {
+  font-weight: bold;
+}
