@@ -2,7 +2,7 @@
 let apiKey = "c6cb65a19d9148cf4b429a8260e0f527";
 
 function searchCity(city) {
-  let apiUrlCity = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
+  let apiUrlCity = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
   axios.get(apiUrlCity).then(showPosition);
 
   function showPosition(response) {
@@ -35,7 +35,7 @@ function showWeather(response) {
 
   let weatherEmojiElement = document.querySelector("#current-weather-emoji");
   let weatherEmoji = response.data.weather[0].icon;
-  weatherEmojiElement.src = `http://openweathermap.org/img/wn/${weatherEmoji}@2x.png`;
+  weatherEmojiElement.src = `https://openweathermap.org/img/wn/${weatherEmoji}@2x.png`;
   document.querySelector("#weather-description").innerHTML =
     response.data.weather[0].description;
   document.querySelector("#current-temperature").innerHTML = Math.round(
@@ -54,7 +54,7 @@ function searchCurrentLocation(event) {
   function handlePosition(position) {
     let latitude = position.coords.latitude;
     let longitude = position.coords.longitude;
-    let apiUrlCity = `http://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
+    let apiUrlCity = `https://api.openweathermap.org/geo/1.0/reverse?lat=${latitude}&lon=${longitude}&appid=${apiKey}`;
     let apiUrlWeather = `https://api.openweathermap.org/data/2.5/weather?lat=${latitude}&lon=${longitude}&appid=${apiKey}&units=metric`;
     axios.get(apiUrlWeather).then(showWeather);
     axios.get(apiUrlCity).then(showCity);
