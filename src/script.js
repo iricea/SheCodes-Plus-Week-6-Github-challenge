@@ -35,7 +35,11 @@ function showWeather(response) {
 
   let weatherEmojiElement = document.querySelector("#current-weather-emoji");
   let weatherEmoji = response.data.weather[0].icon;
-  weatherEmojiElement.src = `https://openweathermap.org/img/wn/${weatherEmoji}@2x.png`;
+  weatherEmojiElement.setAttribute(
+    "src",
+    `https://openweathermap.org/img/wn/${weatherEmoji}@2x.png`
+  );
+  weatherEmojiElement.setAttribute("alt", response.data.weather[0].description);
   document.querySelector("#weather-description").innerHTML =
     response.data.weather[0].description;
   document.querySelector("#current-temperature").innerHTML = Math.round(
