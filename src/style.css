@@ -19,6 +19,8 @@
 
 .card.forecast {
   text-align: center;
+  /* height: 240px; */
+  font-size: 14px;
 }
 
 #celsius,

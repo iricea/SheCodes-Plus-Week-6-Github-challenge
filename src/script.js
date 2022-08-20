@@ -1,6 +1,48 @@
 // Search engine
 let apiKey = "c6cb65a19d9148cf4b429a8260e0f527";
 
+// Show current date and time
+function showCurrentDate() {
+  let now = new Date();
+  let day = now.getDay();
+  let days = [
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday",
+  ];
+  day = days[day];
+  let date = now.getDate();
+  if (date < 10) {
+    date = `0${date}`;
+  }
+  let month = now.getMonth() + 1;
+  if (month < 10) {
+    month = `0${month}`;
+  }
+  let year = now.getFullYear();
+  let hour = now.getHours();
+  if (hour < 10) {
+    hour = `0${hour}`;
+  }
+  let minutes = now.getMinutes();
+  if (minutes < 10) {
+    minutes = `0${minutes}`;
+  }
+  let currentTime = document.querySelector(".current-date-time");
+  currentTime.innerHTML = `${day}, ${date}.${month}.${year} ${hour}:${minutes}`;
+}
+showCurrentDate();
+function formatDay(timestamp) {
+  let date = new Date(timestamp * 1000);
+  let day = date.getDay();
+  let days = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+  return days[day];
+}
+
 function searchCity(city) {
   let apiUrlCity = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&appid=${apiKey}`;
   axios.get(apiUrlCity).then(showPosition);
@@ -24,7 +66,65 @@ function showCity(response) {
 }
 
 // Show city on load
+function displayForecast(response) {
+  let forecast = response.data.list;
+  let forecastElement = document.querySelector("#forecast");
+  let forecastHTML = "";
+
+  forecast.forEach(function (forecastDay, index) {
+    let forecastTimeDay = forecastDay.dt_txt.includes("12:00:00");
+    console.log(forecastTimeDay);
+    let forecastTimeNight = forecastDay.dt_txt.includes("03:00:00");
+    console.log(forecastTimeNight);
+
+    // forecastHTMLDay + forcastHTMLNight
+
+    let forecastHTMLDay = "";
+    let forecastHTMLNight = "";
+
+    function showForecastDay(forecastDay) {
+      while (forecastTimeDay === true) {
+        return (forecastHTMLDay = `<div class="col-2 card forecast">
+          <div class="card-body">
+          <p class="card-title forecast-day">${formatDay(forecastDay.dt)} ${
+          forecastDay.dt_txt
+        }</p>
+          <img src="https://openweathermap.org/img/wn/${
+            forecastDay.weather[0].icon
+          }@2x.png" weather-emoji" />
+          <p class="card-text day">
+          <i class="bi bi-sun"></i>${Math.round(
+            forecast[index].main.temp
+          )}°</p>`);
+      }
+    }
+
+    function showForecastNight(forecastDay) {
+      while (forecastTimeNight === true) {
+        return (forecastHTMLNight = `<p class="card-text night"><i class="bi bi-moon-fill"></i> ${Math.round(
+          forecast[index].main.temp
+        )}° ${forecastDay.dt_txt}</p></div></div>`);
+        console.log(index);
+      }
+    }
+    showForecastNight(forecastDay);
+    showForecastDay(forecastDay);
+    forecastHTML += forecastHTMLDay + forecastHTMLNight;
+    console.log(forecast[index].main.temp);
+    console.log(index);
+    console.log(forecast);
+
+    forecastElement.innerHTML = forecastHTML;
+  });
+}
+
 searchCity("Kyiv");
+
+function getForecast(coordinates) {
+  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+  console.log(apiUrl);
+  axios.get(apiUrl).then(displayForecast);
+}
 
 function showWeather(response) {
   let wind = Math.round(response.data.wind.speed);
@@ -45,6 +145,9 @@ function showWeather(response) {
   document.querySelector("#current-temperature").innerHTML = Math.round(
     response.data.main.temp
   );
+  console.log(response.data);
+
+  getForecast(response.data.coord);
 }
 
 // Find out the searching city
@@ -84,8 +187,7 @@ function toFahrenheit(degreesCelsius) {
     currentTemperatureFahrenheit.classList.add("active-degrees");
     currentTemperatureCelsius.classList.remove("active-degrees");
 
-    return (currentTemperature.innerHTML = degrees =
-      Math.round((degrees * 9) / 5 + 32));
+    return (currentTemperature.innerHTML = Math.round((degrees * 9) / 5 + 32));
   } else {
     return;
   }
@@ -98,56 +200,10 @@ function toCelsius(degreesFahrenheit) {
   ) {
     currentTemperatureCelsius.classList.add("active-degrees");
     currentTemperatureFahrenheit.classList.remove("active-degrees");
-    return (currentTemperature.innerHTML = degrees =
-      Math.round(((degrees - 32) * 5) / 9));
+    return (currentTemperature.innerHTML = Math.round(
+      ((degrees - 32) * 5) / 9
+    ));
   } else {
     return;
   }
 }
-
-// let weatherArray = Object.keys(weather);
-
-// if (weatherArray.includes(inputCity.value)) {
-//   console.log(
-//     `It is currently ${Math.round(weather[city].temp)}°C (${
-//       (Math.round(weather[city].temp) * 9) / 5 + 32
-//     }°F) in ${city} with a humidity of ${weather[city].humidity}%`
-//   );
-// } else {
-//   console.log(
-//     `Sorry, we don't know the weather for this city, try going to https://www.google.com/search?q=weather+${city}`
-//   );
-// }
-
-// Show current date and time
-let now = new Date();
-let day = now.getDay();
-let days = [
-  "Sunday",
-  "Monday",
-  "Tuesday",
-  "Wednesday",
-  "Thursday",
-  "Friday",
-  "Saturday",
-];
-day = days[day];
-let date = now.getDate();
-if (date < 10) {
-  date = `0${date}`;
-}
-let month = now.getMonth() + 1;
-if (month < 10) {
-  month = `0${month}`;
-}
-let year = now.getFullYear();
-let hour = now.getHours();
-if (hour < 10) {
-  hour = `0${hour}`;
-}
-let minutes = now.getMinutes();
-if (minutes < 10) {
-  minutes = `0${minutes}`;
-}
-let currentTime = document.querySelector(".current-date-time");
-currentTime.innerHTML = `${day}, ${date}.${month}.${year} ${hour}:${minutes}`;
