@@ -74,13 +74,13 @@ function displayForecast(response) {
   let forecastHTML = `<div class="row">`;
 
   forecast.forEach(function (forecastDay, index) {
-    if ((index < 7) & (index !== 0)) {
-      forecastHTML += `<div class="col-2 card forecast">
+    if ((index < 6) & (index !== 0)) {
+      forecastHTML += `<div class="col card forecast">
           <div class="card-body">
           <p class="card-title forecast-day">${formatDay(forecastDay.dt)}</p>
           <img src="https://openweathermap.org/img/wn/${
             forecastDay.weather[0].icon
-          }@2x.png" weather-emoji" />
+          }@2x.png" class="weather-emoji" width="42" />
           <p class="card-text day">
           <i class="bi bi-sun"></i>${Math.round(
             forecastDay.temp.max
