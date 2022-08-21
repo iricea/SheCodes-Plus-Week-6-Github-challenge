@@ -36,6 +36,7 @@ function showCurrentDate() {
   currentTime.innerHTML = `${day}, ${date}.${month}.${year} ${hour}:${minutes}`;
 }
 showCurrentDate();
+
 function formatDay(timestamp) {
   let date = new Date(timestamp * 1000);
   let day = date.getDay();
@@ -67,53 +68,27 @@ function showCity(response) {
 
 // Show city on load
 function displayForecast(response) {
-  let forecast = response.data.list;
+  let forecast = response.data.daily;
+  console.log(forecast);
   let forecastElement = document.querySelector("#forecast");
-  let forecastHTML = "";
+  let forecastHTML = `<div class="row">`;
 
   forecast.forEach(function (forecastDay, index) {
-    let forecastTimeDay = forecastDay.dt_txt.includes("12:00:00");
-    console.log(forecastTimeDay);
-    let forecastTimeNight = forecastDay.dt_txt.includes("03:00:00");
-    console.log(forecastTimeNight);
-
-    // forecastHTMLDay + forcastHTMLNight
-
-    let forecastHTMLDay = "";
-    let forecastHTMLNight = "";
-
-    function showForecastDay(forecastDay) {
-      while (forecastTimeDay === true) {
-        return (forecastHTMLDay = `<div class="col-2 card forecast">
+    if ((index < 7) & (index !== 0)) {
+      forecastHTML += `<div class="col-2 card forecast">
           <div class="card-body">
-          <p class="card-title forecast-day">${formatDay(forecastDay.dt)} ${
-          forecastDay.dt_txt
-        }</p>
+          <p class="card-title forecast-day">${formatDay(forecastDay.dt)}</p>
           <img src="https://openweathermap.org/img/wn/${
             forecastDay.weather[0].icon
           }@2x.png" weather-emoji" />
           <p class="card-text day">
           <i class="bi bi-sun"></i>${Math.round(
-            forecast[index].main.temp
-          )}°</p>`);
-      }
+            forecastDay.temp.max
+          )}°</p><p class="card-text night"><i class="bi bi-moon-fill"></i> ${Math.round(
+        forecastDay.temp.min
+      )}°</p></div></div>`;
     }
-
-    function showForecastNight(forecastDay) {
-      while (forecastTimeNight === true) {
-        return (forecastHTMLNight = `<p class="card-text night"><i class="bi bi-moon-fill"></i> ${Math.round(
-          forecast[index].main.temp
-        )}° ${forecastDay.dt_txt}</p></div></div>`);
-        console.log(index);
-      }
-    }
-    showForecastNight(forecastDay);
-    showForecastDay(forecastDay);
-    forecastHTML += forecastHTMLDay + forecastHTMLNight;
-    console.log(forecast[index].main.temp);
-    console.log(index);
-    console.log(forecast);
-
+    console.log(forecastDay);
     forecastElement.innerHTML = forecastHTML;
   });
 }
@@ -121,7 +96,7 @@ function displayForecast(response) {
 searchCity("Kyiv");
 
 function getForecast(coordinates) {
-  let apiUrl = `https://api.openweathermap.org/data/2.5/forecast?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
+  let apiUrl = `https://api.openweathermap.org/data/2.5/onecall?lat=${coordinates.lat}&lon=${coordinates.lon}&appid=${apiKey}&units=metric`;
   console.log(apiUrl);
   axios.get(apiUrl).then(displayForecast);
 }
